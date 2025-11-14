@@ -1,0 +1,21 @@
+salle_tp_accueil:
+  path: /accueil
+  controller: App\Controller\SalleController::accueil
+
+salle_tp_afficher:
+  path: /afficher/{numero}
+  controller: App\Controller\SalleController::afficher
+  requirements:
+    numero: \d{1,2}
+
+salle_tp_dix:
+  path: /dix
+  controller: App\Controller\SalleController::dix
+
+salle_tp_treize:
+  path: /treize
+  controller: App\Controller\SalleController::treize
+
+salle_tp_quatorze:
+  path: /quatorze
+  controller: App\Controller\SalleController::quatorze
