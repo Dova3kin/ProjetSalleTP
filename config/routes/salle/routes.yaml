@@ -19,3 +19,21 @@ salle_tp_treize:
 salle_tp_quatorze:
   path: /quatorze
   controller: App\Controller\SalleController::quatorze
+
+salle_tp_voir:
+  path: /voir/{id}
+  controller: App\Controller\SalleController::voir
+  requirements:
+    id: \d+
+
+salle_tp_ajouter:
+  path: /ajouter/{batiment}-{etage}.{numero}
+  controller: App\Controller\SalleController::ajouter
+  requirements:
+    batiment: A|B|C|D
+    etage: \d
+    numero: \d{1,2}
+
+salle_tp_ajouter2:
+  path: /ajouter2
+  controller: App\Controller\SalleController::ajouter2
