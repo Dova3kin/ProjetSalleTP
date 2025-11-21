@@ -10,13 +10,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class SalleController extends AbstractController
 {
-    public function accueil()
+    public function accueil(Session $session)
     {
-        $nombre = rand(1, 100);
-        return $this->render('salle\accueil.html.twig', ['numero' => $nombre]);
+        if ($session->has('nbreFois'))
+            $session->set('nbreFois', $session->get('nbreFois') + 1);
+        else
+            $session->set('nbreFois', 1);
+        return $this->render('salle/accueil.html.twig', array('nbreFois' => $session->get('nbreFois')));
     }
 
     public function afficher($numero)
@@ -79,7 +83,7 @@ class SalleController extends AbstractController
         );
     }
 
-    public function ajouter2(EntityManagerInterface $entityManager, Request $request)
+    public function ajouter2(EntityManagerInterface $entityManager, Request $request, Session $session)
     {
         $salle = new Salle;
         $form = $this->createFormBuilder($salle)
@@ -92,14 +96,19 @@ class SalleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($salle);
             $entityManager->flush();
-            return $this->redirectToRoute(
-                'salle_tp_voir',
-                array('id' => $salle->getId())
-            );
+            $session->getFlashBag()->add('infoAjout', 'nouvelle salle ajoutée :' . $salle);
+            return $this->redirectToRoute('salle_tp_voir', array('id' => $salle->getId()));
         }
         return $this->render(
             'salle/ajouter2.html.twig',
             array('monFormulaire' => $form->createView())
         );
+    }
+
+    public function navigation(EntityManagerInterface $entityManager)
+    {
+        $salles = $entityManager
+            ->getRepository(Salle::class)->findAll();
+        return $this->render('salle/navigation.html.twig', array('salles' => $salles));
     }
 }

@@ -1,7 +1,12 @@
-<!DOCTYPE html>
-<html>
- <body>
-    <h2>ajouter une salle</h2>
-        {{ form(monFormulaire) }}
- </body>
-</html>
+{% extends "layoutgeneral.html.twig" %}
+
+{% block titre %}
+    {{ parent() }} : Ajout
+{% endblock %}
+
+
+{% block contenu %}
+    {{ form(monFormulaire) }}
+{% endblock %}
+
+
