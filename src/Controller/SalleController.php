@@ -3,17 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Salle;
-use Symfony\Component\HttpFoundation\Response;
 use App\Form\Type\SalleType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
-use Reflection;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Session\Session;
-use ReflectionClass;
 
 class SalleController extends AbstractController
 {
