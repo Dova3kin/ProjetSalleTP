@@ -10,4 +10,11 @@
  <li>etage {{ salle.etage }}</li>
  <li>numero {{ salle.numero }}</li>
  </ul>
+ <p><a href="{{ path('salle_tp_modifier', { 'id': salle.id }) }}">modifier la salle</a></p>
+    <ul> message :
+    {% for message in app.session.flashbag.get('infoAjout') %}
+        <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+ </p>
 {% endblock %}

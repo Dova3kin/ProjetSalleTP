@@ -1,12 +1,10 @@
 {% extends "layoutgeneral.html.twig" %}
 
 {% block titre %}
-    {{ parent() }} : Ajout
+ {{ parent() }} - ajouter une salle
 {% endblock %}
-
 
 {% block contenu %}
-    {{ form(monFormulaire) }}
+ <h3>renseigner les champs ci-dessous</h3>
+ {% include "salle/formulaire.html.twig" %}
 {% endblock %}
-
-
