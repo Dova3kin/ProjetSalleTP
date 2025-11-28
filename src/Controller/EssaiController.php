@@ -68,8 +68,7 @@ final class EssaiController extends AbstractController
         $result .= 'flush id:' . $id . ' --- contains:' . $entityManager->contains($salle)
             . '<br />';
         $entityManager->clear();
-        $result .= 'clear --- contains:' . $entityManager->contains($salle) . '<br
-/>';
+        $result .= 'clear --- contains:' . $entityManager->contains($salle) . '<br/>';
         $repo = $entityManager->getRepository(Salle::class);
         $salle = $repo->find($id);
         $result .= 'find(' . $id . ') --- contains(cette salle):'
@@ -116,5 +115,82 @@ final class EssaiController extends AbstractController
         $result .= 'remove salle puis flush<br />' . 'find(' . $id . ')='
             . $repo->find($id) . '<br />' . 'contains(salle):' . $entityManager->contains($salle);
         return new Response("<html><body>$result</body></html>");
+    }
+
+    public function test6(EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Salle::class);
+        $salle = $repo->find(1);
+        dump($salle);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test7(EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Salle::class);
+        $salles = $repo->findAll();
+        dump($salles);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test8(EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Salle::class);
+        $salles = $repo->findBy(
+            array('etage' => 1),
+            array('numero' => 'asc'),
+            2,
+            1
+        );
+        dump($salles);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test9(EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Salle::class);
+        $salle = $repo->findOneBy(array('etage' => 1));
+        dump($salle);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test10(EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Salle::class);
+        $salles = $repo->findByBatiment('B');
+        dump($salles);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test11(EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Salle::class);
+        $salle = $repo->findOneByEtage(1);
+        dump($salle);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test12(EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Salle::class);
+        $salles = $repo->findByBatimentAndEtageMax('D', 6);
+        dump($salles);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test13(EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Salle::class);
+        $salles = $repo->findSalleBatAouB();
+        dump($salles);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test14(EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Salle::class);
+        $result = $repo->plusUnNumero();
+        return new Response('<html><body><a href="http://localhost/phpmyadmin">
+ voir phpmyadmin</a></body></html>');
     }
 }
