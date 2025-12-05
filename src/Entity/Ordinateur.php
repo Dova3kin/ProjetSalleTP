@@ -21,7 +21,7 @@ class Ordinateur
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $numero = null;
 
-    #[ORM\ManyToOne(cascade: ["persist"])]
+    #[ORM\ManyToOne(cascade: ["persist"], inversedBy: 'ordinateurs')]
     private ?Salle $salle = null;
 
     public function getId(): ?int
