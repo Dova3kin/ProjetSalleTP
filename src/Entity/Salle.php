@@ -72,4 +72,11 @@ class Salle
     {
         return $this->getBatiment() . '-' . $this->getEtage() . '.' . $this->getNumero();
     }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function corrigeNomBatiment()
+    {
+        $this->batiment = strtoupper($this->batiment);
+    }
 }

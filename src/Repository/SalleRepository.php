@@ -38,9 +38,25 @@ class SalleRepository extends ServiceEntityRepository
     public function plusUnNumero()
     {
         $query = $this->getEntityManager()
-            ->createQuery("UPDATE App\Entity\Salle s
- SET s.numero = s.numero + '1'");
+            ->createQuery("UPDATE App\Entity\Salle s SET s.numero = s.numero + '1'");
         return $query->execute();
+    }
+
+    public function testGetResult()
+    {
+        $queryBuilder = $this->createQueryBuilder('s');
+        $queryBuilder->where("s.batiment = 'B'");
+        $query = $queryBuilder->getQuery();
+        return $query->getResult();
+    }
+
+    public function testGetSingleScalarResult()
+    {
+        $queryBuilder = $this->createQueryBuilder('s');
+        $queryBuilder->select('COUNT(s)');
+        $queryBuilder->where("s.batiment = 'B'");
+        $query = $queryBuilder->getQuery();
+        return $query->getSingleScalarResult();
     }
 
     //    /**
