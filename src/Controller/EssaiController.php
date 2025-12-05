@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Salle;
+use App\Entity\Ordinateur;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class EssaiController extends AbstractController
@@ -222,5 +223,64 @@ final class EssaiController extends AbstractController
             'salle_tp_voir',
             array('id' => $salle->getId())
         );
+    }
+
+    public function test25(EntityManagerInterface $entityManager)
+    {
+        $salle = $entityManager->getRepository(Salle::class)->findOneBy(array(
+            'batiment' => 'D',
+            'etage' => 7,
+            'numero' => 71
+        ));
+        $ordi = new Ordinateur;
+        $ordi->setNumero(702);
+        $ordi->setIp('192.168.7.02');
+        $ordi->setSalle($salle);
+        $entityManager->persist($ordi);
+        $entityManager->flush();
+        dump($ordi);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test26(EntityManagerInterface $em)
+    {
+        $salle = new Salle;
+        $salle->setBatiment('B');
+        $salle->setEtage(0);
+        $salle->setNumero(0);
+        $ordi = new Ordinateur;
+        $ordi->setNumero(701);
+        $ordi->setIp('192.168.7.01');
+        $ordi->setSalle($salle);
+        $em->persist($ordi);
+        $em->flush();
+        dump($ordi);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test27(EntityManagerInterface $em)
+    {
+        $salle = new Salle;
+        $salle->setBatiment('B');
+        $salle->setEtage(0);
+        $salle->setNumero(1);
+        $ordi = new Ordinateur;
+        $ordi->setNumero(703);
+        $ordi->setIp('192.168.7.03');
+        $ordi->setSalle($salle);
+        $em->persist($ordi);
+        $em->flush();
+        dump($ordi);
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test28(EntityManagerInterface $em)
+    {
+        $ordi = $em->getRepository(Ordinateur::class)->findOneByNumero(703);
+        dump($ordi);
+        $batiment = $ordi->getSalle()->getBatiment();
+        dump($batiment);
+        dump($ordi);
+        return new Response('<html><body></body></html>');
     }
 }
