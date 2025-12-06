@@ -22,6 +22,7 @@ class Ordinateur
     private ?int $numero = null;
 
     #[ORM\ManyToOne(cascade: ["persist"], inversedBy: 'ordinateurs')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Salle $salle = null;
 
     public function getId(): ?int
