@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Salle;
 use App\Entity\Ordinateur;
+use App\Entity\Logiciel;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class EssaiController extends AbstractController
@@ -413,5 +414,87 @@ final class EssaiController extends AbstractController
         $em->remove($salle);
         $em->flush();
         return new Response('<html><body>rechercher la salle D-9.04 puis les ordis 904 et 905 avec PhpMyAdmin</body></html>');
+    }
+
+    public function test39(EntityManagerInterface $entityManager)
+    {
+        $ordi1 = new Ordinateur;
+        $ordi1->setNumero(1000);
+        $ordi1->setIp('192.168.10.00');
+        $salle = $entityManager->getRepository(Salle::class)
+            ->findOneByBatiment('D');
+        $ordi1->setSalle($salle);
+        $ordi2 = new Ordinateur;
+        $ordi2->setNumero(1001);
+        $ordi2->setIp('192.168.10.01');
+        $ordi2->setSalle($salle);
+        $logicielF = new Logiciel;
+        $logicielF->setNom('Firefox');
+        $entityManager->persist($logicielF);
+        $logicielG = new Logiciel;
+        $logicielG->setNom('Gimp2.2');
+        $entityManager->persist($logicielG);
+        $logicielF->addMachineInstallee($ordi1);
+        $logicielG->addMachineInstallee($ordi1);
+        $logicielF->addMachineInstallee($ordi2);
+        $ordi2->addLogicielInstalle($logicielG);
+        $entityManager->flush();
+        return new Response('<html><body></body></html>');
+    }
+
+    public function test40(EntityManagerInterface $em)
+    {
+        $repo = $em->getRepository(Logiciel::class);
+        $logiciel = $repo->findOneByNom('Firefox');
+        $result = "";
+        foreach ($logiciel->getMachineInstallees() as $ordi)
+            $result .= " - " . $ordi->getIp();
+        return new Response('<html><body>' . $result . '</body></html>');
+    }
+
+    public function test43(EntityManagerInterface $em)
+    {
+        $ordi = $em->getRepository(Ordinateur::class)
+            ->findOneByIp('192.168.10.00');
+        $em->remove($ordi);
+        $em->flush();
+        $repo = $em->getRepository(Logiciel::class);
+        $logiciel = $repo->findOneByNom('Firefox');
+        $result = "";
+        foreach ($logiciel->getMachineInstallees() as $ordi)
+            $result .= " - " . $ordi->getIp();
+        return new Response('<html><body>' . $result . '</body></html>');
+    }
+
+    public function test41(EntityManagerInterface $em)
+    {
+        $ordi = new Ordinateur;
+        $ordi->setNumero(1000);
+        $ordi->setIp('192.168.10.00');
+        $repo = $em->getRepository(Logiciel::class);
+        $ordi->addLogicielInstalle($repo->findOneByNom('Firefox'));
+        $ordi->addLogicielInstalle($repo->findOneByNom('Gimp2.2'));
+        $em->persist($ordi);
+        $em->flush();
+        $logiciels = $repo->findByOrdinateur('192.168.10.00');
+        $result = ' ';
+        foreach ($logiciels as $logiciel)
+            $result .= $logiciel->getNom() . ' ';
+        return new Response('<html><body>' . $result . '</body></html>');
+    }
+
+    public function test42(EntityManagerInterface $em)
+    {
+
+        $logicielC = new Logiciel;
+        $logicielC->setNom('Apache');
+        $em->persist($logicielC);
+        $em->flush();
+        $repom = $em->getRepository(Logiciel::class);
+        $logicielOrdis = $repom->getLogicielsEtEventuellementOrdinateurs();
+        $result = ' ';
+        foreach ($logicielOrdis as $logicielOrdi)
+            $result .= $logicielOrdi['nom'] . ' : ' . $logicielOrdi['ip'] . '<br />';
+        return new Response('<html><body>' . $result . '</body></html>');
     }
 }
